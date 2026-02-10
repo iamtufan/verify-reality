@@ -164,7 +164,7 @@ function handleDrop(e) {
 }
 
 // Analyze media function
-function analyzeMedia() {
+async function analyzeMedia() {
     if (!uploadedFile) {
         showNotification('Please upload a file first!', 'warning');
         return;
@@ -179,21 +179,40 @@ function analyzeMedia() {
     const loader = document.getElementById('analysisLoader');
     loader.classList.add('active');
 
-    // Simulate analysis process
-    simulateAnalysis();
+    // Start progress animation
+    animateProgress();
+
+    try {
+        // Call the actual API
+        const result = await callDetectionAPI(uploadedFile, currentType);
+        
+        if (result) {
+            // Hide loader
+            loader.classList.remove('active');
+            
+            // Show results from API
+            displayResults(result);
+        } else {
+            throw new Error('API returned no data');
+        }
+    } catch (error) {
+        console.error('Analysis Error:', error);
+        loader.classList.remove('active');
+        showNotification('Analysis failed. Please try again or check your API configuration.', 'danger');
+    }
 }
 
-// Simulate analysis with progress
-function simulateAnalysis() {
+// Animate progress during API call
+function animateProgress() {
     const progressBar = document.getElementById('progressBar');
     const loaderText = document.getElementById('loaderText');
     
     const steps = [
-        { progress: 20, text: 'Extracting metadata...' },
+        { progress: 20, text: 'Uploading file to server...' },
         { progress: 40, text: 'Analyzing pixel patterns...' },
-        { progress: 60, text: 'Detecting noise artifacts...' },
+        { progress: 60, text: 'Detecting AI signatures...' },
         { progress: 80, text: 'Running neural network analysis...' },
-        { progress: 100, text: 'Finalizing results...' }
+        { progress: 95, text: 'Processing results...' }
     ];
 
     let currentStep = 0;
@@ -205,25 +224,22 @@ function simulateAnalysis() {
             currentStep++;
         } else {
             clearInterval(interval);
-            setTimeout(() => {
-                showResults();
-            }, 500);
         }
     }, 800);
+
+    // Store interval ID to clear it if API returns early
+    return interval;
 }
 
-// Show analysis results
-function showResults() {
-    // Hide loader
-    const loader = document.getElementById('analysisLoader');
-    loader.classList.remove('active');
-
-    // Generate random result (replace with actual API call)
-    const isAI = Math.random() > 0.5;
-    const confidence = Math.floor(Math.random() * 20) + 80; // 80-100%
-
+// Display analysis results from API
+function displayResults(apiResult) {
     const resultArea = document.getElementById('resultArea');
     
+    // Extract data from API result
+    const isAI = apiResult.isAI || apiResult.is_ai_generated || apiResult.ai_detected || false;
+    const confidence = apiResult.confidence || apiResult.confidence_score || 0;
+    const details = apiResult.details || apiResult.analysis_details || {};
+
     if (isAI) {
         resultArea.innerHTML = `
             <div class="text-center">
@@ -258,7 +274,7 @@ function showResults() {
                                 <i class="fa-solid fa-circle-check text-danger me-2 mt-1"></i>
                                 <div>
                                     <small class="text-white fw-bold">Noise Pattern Analysis</small>
-                                    <p class="small text-muted mb-0">Unnatural pixel distribution detected</p>
+                                    <p class="small text-muted mb-0">${details.noise_pattern || 'Unnatural pixel distribution detected'}</p>
                                 </div>
                             </div>
                         </div>
@@ -267,7 +283,7 @@ function showResults() {
                                 <i class="fa-solid fa-circle-check text-danger me-2 mt-1"></i>
                                 <div>
                                     <small class="text-white fw-bold">Metadata Signature</small>
-                                    <p class="small text-muted mb-0">Missing EXIF camera data</p>
+                                    <p class="small text-muted mb-0">${details.metadata || 'Missing EXIF camera data'}</p>
                                 </div>
                             </div>
                         </div>
@@ -276,7 +292,7 @@ function showResults() {
                                 <i class="fa-solid fa-circle-check text-danger me-2 mt-1"></i>
                                 <div>
                                     <small class="text-white fw-bold">Artifact Detection</small>
-                                    <p class="small text-muted mb-0">AI generation artifacts found</p>
+                                    <p class="small text-muted mb-0">${details.artifacts || 'AI generation artifacts found'}</p>
                                 </div>
                             </div>
                         </div>
@@ -285,7 +301,7 @@ function showResults() {
                                 <i class="fa-solid fa-circle-check text-danger me-2 mt-1"></i>
                                 <div>
                                     <small class="text-white fw-bold">Neural Network Score</small>
-                                    <p class="small text-muted mb-0">High AI probability score</p>
+                                    <p class="small text-muted mb-0">${details.neural_score || 'High AI probability score'}</p>
                                 </div>
                             </div>
                         </div>
@@ -331,7 +347,7 @@ function showResults() {
                                 <i class="fa-solid fa-circle-check text-success me-2 mt-1"></i>
                                 <div>
                                     <small class="text-white fw-bold">Natural Noise Pattern</small>
-                                    <p class="small text-muted mb-0">Consistent with camera sensors</p>
+                                    <p class="small text-muted mb-0">${details.noise_pattern || 'Consistent with camera sensors'}</p>
                                 </div>
                             </div>
                         </div>
@@ -340,7 +356,7 @@ function showResults() {
                                 <i class="fa-solid fa-circle-check text-success me-2 mt-1"></i>
                                 <div>
                                     <small class="text-white fw-bold">Valid Metadata</small>
-                                    <p class="small text-muted mb-0">Authentic EXIF data present</p>
+                                    <p class="small text-muted mb-0">${details.metadata || 'Authentic EXIF data present'}</p>
                                 </div>
                             </div>
                         </div>
@@ -349,7 +365,7 @@ function showResults() {
                                 <i class="fa-solid fa-circle-check text-success me-2 mt-1"></i>
                                 <div>
                                     <small class="text-white fw-bold">No AI Artifacts</small>
-                                    <p class="small text-muted mb-0">Clean from generation markers</p>
+                                    <p class="small text-muted mb-0">${details.artifacts || 'Clean from generation markers'}</p>
                                 </div>
                             </div>
                         </div>
@@ -358,7 +374,7 @@ function showResults() {
                                 <i class="fa-solid fa-circle-check text-success me-2 mt-1"></i>
                                 <div>
                                     <small class="text-white fw-bold">Neural Network Score</small>
-                                    <p class="small text-muted mb-0">Low AI probability score</p>
+                                    <p class="small text-muted mb-0">${details.neural_score || 'Low AI probability score'}</p>
                                 </div>
                             </div>
                         </div>
@@ -476,43 +492,148 @@ function updateNavbarOnScroll() {
     });
 }
 
-// API Integration placeholder (to be implemented with actual API)
-async function callDetectionAPI(file, type) {
-    // This is where you'll integrate your actual AI detection API
-    // Example structure:
-    
-    /*
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('type', type);
-    
-    try {
-        const response = await fetch('YOUR_API_ENDPOINT', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Authorization': 'Bearer YOUR_API_KEY'
-            }
-        });
-        
-        const data = await response.json();
-        return {
-            isAI: data.is_ai_generated,
-            confidence: data.confidence,
-            details: data.analysis_details
-        };
-    } catch (error) {
-        console.error('API Error:', error);
-        return null;
+// ============================================
+// API CONFIGURATION - UPDATE WITH YOUR API DETAILS
+// ============================================
+const API_CONFIG = {
+    endpoint: 'https://iamtufan.github.io/verify-reality', // e.g., 'https://api.example.com/detect'
+    apiKey: 'AIzaSyD9GRtG19-Go-qSP5sYWK-okYYFb_1hKW0',        // Your API key (if required)
+    method: 'POST',
+    headers: {
+        // Add your required headers here
+        // 'Authorization': 'Bearer YOUR_API_KEY',
+        // 'Content-Type': 'multipart/form-data' // Usually not needed for FormData
     }
-    */
+};
+
+// API Integration - Call AI Detection API
+async function callDetectionAPI(file, type) {
+    try {
+        // Create FormData object to send file
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('type', type);
+        
+        // Add any additional parameters your API needs
+        // formData.append('model', 'v2');
+        // formData.append('language', 'en');
+
+        console.log('Sending request to API...');
+        console.log('File:', file.name, 'Type:', type);
+
+        // Make API request
+        const response = await fetch(API_CONFIG.endpoint, {
+            method: API_CONFIG.method,
+            headers: {
+                'Authorization': `Bearer ${API_CONFIG.apiKey}`,
+                // Don't set Content-Type for FormData - browser sets it automatically with boundary
+                ...API_CONFIG.headers
+            },
+            body: formData
+        });
+
+        // Check if request was successful
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        }
+
+        // Parse JSON response
+        const data = await response.json();
+        console.log('API Response:', data);
+
+        // Map API response to expected format
+        // ADJUST THIS BASED ON YOUR API'S RESPONSE STRUCTURE
+        return {
+            isAI: data.is_ai_generated || data.ai_detected || data.fake || false,
+            confidence: Math.round(data.confidence * 100) || Math.round(data.score * 100) || 0,
+            details: {
+                noise_pattern: data.noise_analysis || data.details?.noise,
+                metadata: data.metadata_analysis || data.details?.metadata,
+                artifacts: data.artifacts_detected || data.details?.artifacts,
+                neural_score: data.neural_network_score || data.details?.neural_score
+            }
+        };
+
+    } catch (error) {
+        console.error('API Call Error:', error);
+        
+        // Show user-friendly error message
+        if (error.message.includes('Failed to fetch')) {
+            throw new Error('Unable to connect to detection service. Please check your internet connection.');
+        } else if (error.message.includes('API Error: 401')) {
+            throw new Error('Authentication failed. Please check your API key.');
+        } else if (error.message.includes('API Error: 429')) {
+            throw new Error('Too many requests. Please try again later.');
+        } else {
+            throw new Error(`Detection failed: ${error.message}`);
+        }
+    }
+}
+
+// Alternative API format examples:
+// If your API uses different format, uncomment and modify:
+
+/*
+// Example 1: Base64 encoding
+async function callDetectionAPI(file, type) {
+    const base64 = await fileToBase64(file);
     
-    // For now, returning mock data
+    const response = await fetch(API_CONFIG.endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_CONFIG.apiKey}`
+        },
+        body: JSON.stringify({
+            image: base64,
+            type: type
+        })
+    });
+    
+    const data = await response.json();
     return {
-        isAI: Math.random() > 0.5,
-        confidence: Math.floor(Math.random() * 20) + 80
+        isAI: data.prediction === 'ai',
+        confidence: data.confidence_percentage
     };
 }
+
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = error => reject(error);
+    });
+}
+*/
+
+/*
+// Example 2: URL-based API
+async function callDetectionAPI(file, type) {
+    // First upload file to get URL
+    const uploadResponse = await uploadFile(file);
+    const fileUrl = uploadResponse.url;
+    
+    // Then analyze the URL
+    const response = await fetch(API_CONFIG.endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': API_CONFIG.apiKey
+        },
+        body: JSON.stringify({
+            url: fileUrl,
+            analysis_type: type
+        })
+    });
+    
+    const data = await response.json();
+    return {
+        isAI: data.result.is_synthetic,
+        confidence: data.result.confidence_score
+    };
+}
+*/
 
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {

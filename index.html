@@ -3,146 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Reality | AI Detector</title>
+    <title>AI Reality Detector | Verify Authenticity</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="fa-solid fa-layer-group me-2 text-warning"></i>Verify Reality</a>
+            <a class="navbar-brand" href="#home">
+                <i class="fa-solid fa-layer-group me-2 text-warning"></i>
+                <span class="brand-text">AI Detector</span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto text-center">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" id="nav-img" onclick="switchTab('image')">AI Image</a></li>
-                    <li class="nav-item"><a class="nav-link" id="nav-vid" onclick="switchTab('video')">AI Video</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <button class="btn btn-outline-light btn-sm px-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i> Login
+                        </button>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-warning btn-sm px-3" data-bs-toggle="modal" data-bs-target="#signupModal">
+                            <i class="fa-solid fa-user-plus me-1"></i> Sign Up
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="main-content">
-        <div class="container text-center">
+    <!-- Main Content -->
+    <div class="main-content" id="home">
+        <div class="container">
             
-            <div class="mb-5">
-                <p class="text-secondary mb-2 text-uppercase letter-spacing-2">Artificial Intelligence Detection</p>
-                <h1 class="display-4 fw-bold mb-3" id="mainTitle">Analyze Image Reality</h1>
-                <p class="lead text-muted mx-auto" style="max-width: 600px;">
-                    Our advanced neural engine scans pixel patterns to distinguish between human-captured moments and AI-generated fabrications.
+            <!-- Hero Section -->
+            <div class="text-center mb-5 animate__animated animate__fadeInDown">
+                <p class="text-secondary mb-2 text-uppercase letter-spacing-3 small fw-bold">
+                    <i class="fa-solid fa-shield-halved me-2"></i>Advanced AI Detection Technology
+                </p>
+                <h1 class="display-3 fw-bold mb-3 gradient-text">Verify Digital Reality</h1>
+                <p class="lead mx-auto" style="max-width: 700px;">
+                    Upload any media and instantly discover if it's AI-generated or authentic. 
+                    Powered by advanced neural analysis for images, videos, audio, links, and news.
                 </p>
             </div>
 
-            <div class="upload-container">
+            <!-- Detection Type Tabs -->
+            <div class="detection-tabs animate__animated animate__fadeInUp">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-type="image" onclick="switchDetectionType('image')">
+                        <i class="fa-solid fa-image"></i>
+                        <span>Image</span>
+                        <span class="badge-free">Free</span>
+                    </button>
+                    <button class="tab-btn" data-type="video" onclick="switchDetectionType('video')">
+                        <i class="fa-solid fa-video"></i>
+                        <span>Video</span>
+                        <span class="badge-free">Free</span>
+                    </button>
+                    <button class="tab-btn" data-type="audio" onclick="switchDetectionType('audio')">
+                        <i class="fa-solid fa-microphone"></i>
+                        <span>Audio</span>
+                        <span class="badge-pro">Pro</span>
+                    </button>
+                    <button class="tab-btn" data-type="link" onclick="switchDetectionType('link')">
+                        <i class="fa-solid fa-link"></i>
+                        <span>Link</span>
+                        <span class="badge-pro">Pro</span>
+                    </button>
+                    <button class="tab-btn" data-type="news" onclick="switchDetectionType('news')">
+                        <i class="fa-solid fa-newspaper"></i>
+                        <span>News</span>
+                        <span class="badge-pro">Pro</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-container mt-5">
                 
-                <div id="imageSection" class="section-view active">
-                    <div class="upload-box animate__animated animate__fadeInUp" onclick="document.getElementById('imageInput').click()">
-                        <i class="fa-solid fa-image upload-icon"></i>
-                        <h3>Upload Image to Check</h3>
-                        <p class="text-gray mb-0">Supports JPG, PNG, WEBP</p>
-                        <p class="small text-muted mt-2">(Click to browse files)</p>
+                <!-- Image Detection -->
+                <div id="imageSection" class="detection-section active">
+                    <div class="upload-box" onclick="document.getElementById('imageInput').click()">
+                        <div class="upload-icon-wrapper">
+                            <i class="fa-solid fa-image upload-icon"></i>
+                        </div>
+                        <h3 class="mt-4 mb-2">Upload Image to Verify</h3>
+                        <p class=" mb-3">Drag & drop or click to browse</p>
+                        <p class="small text-secondary">
+                            <i class="fa-solid fa-check-circle text-success me-1"></i> Supports JPG, PNG, WEBP, GIF
+                        </p>
+                        <div class="file-preview" id="imagePreview"></div>
                     </div>
                     <input type="file" id="imageInput" hidden accept="image/*">
                 </div>
 
-                <div id="videoSection" class="section-view">
-                    <div class="upload-box animate__animated animate__fadeInUp" onclick="document.getElementById('videoInput').click()">
-                        <i class="fa-solid fa-clapperboard upload-icon"></i>
-                        <h3>Upload Video to Check</h3>
-                        <p class="text-gray mb-0">Supports MP4, MOV, AVI</p>
-                        <p class="small text-muted mt-2">(Max size 50MB)</p>
+                <!-- Video Detection -->
+                <div id="videoSection" class="detection-section">
+                    <div class="upload-box" onclick="document.getElementById('videoInput').click()">
+                        <div class="upload-icon-wrapper">
+                            <i class="fa-solid fa-video upload-icon"></i>
+                        </div>
+                        <h3 class="mt-4 mb-2">Upload Video to Verify</h3>
+                        <p class=" mb-3">Drag & drop or click to browse</p>
+                        <p class="small text-secondary">
+                            <i class="fa-solid fa-check-circle text-success me-1"></i> Supports MP4, MOV, AVI (Max 50MB)
+                        </p>
+                        <div class="file-preview" id="videoPreview"></div>
                     </div>
                     <input type="file" id="videoInput" hidden accept="video/*">
                 </div>
 
-                <div class="mt-5">
-                    <button class="btn btn-check-media" id="checkBtn">
-                        Check Now <i class="fa-solid fa-arrow-right ms-2"></i>
+                <!-- Audio Detection (Pro) -->
+                <div id="audioSection" class="detection-section">
+                    <div class="upload-box locked">
+                        <div class="upload-icon-wrapper">
+                            <i class="fa-solid fa-lock upload-icon"></i>
+                        </div>
+                        <h3 class="mt-4 mb-2">Audio Detection</h3>
+                        <p class=" mb-3">Premium feature - Login required</p>
+                        <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fa-solid fa-crown me-2"></i>Unlock with Pro
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Link Detection (Pro) -->
+                <div id="linkSection" class="detection-section">
+                    <div class="upload-box locked">
+                        <div class="upload-icon-wrapper">
+                            <i class="fa-solid fa-lock upload-icon"></i>
+                        </div>
+                        <h3 class="mt-4 mb-2">Link Analysis</h3>
+                        <p class=" mb-3">Premium feature - Login required</p>
+                        <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fa-solid fa-crown me-2"></i>Unlock with Pro
+                        </button>
+                    </div>
+                </div>
+
+                <!-- News Detection (Pro) -->
+                <div id="newsSection" class="detection-section">
+                    <div class="upload-box locked">
+                        <div class="upload-icon-wrapper">
+                            <i class="fa-solid fa-lock upload-icon"></i>
+                        </div>
+                        <h3 class="mt-4 mb-2">News Verification</h3>
+                        <p class=" mb-3">Premium feature - Login required</p>
+                        <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fa-solid fa-crown me-2"></i>Unlock with Pro
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Check Button -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-check-media" id="checkBtn" onclick="analyzeMedia()">
+                        <span class="btn-text">Analyze Now</span>
+                        <i class="fa-solid fa-magnifying-glass-chart ms-2"></i>
                     </button>
                 </div>
 
-                <div class="mt-4" id="analysisLoader" style="display:none;">
-                    <div class="progress" style="height: 6px; background: #333;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 0%"></div>
+                <!-- Analysis Loader -->
+                <div class="analysis-loader" id="analysisLoader">
+                    <div class="loader-animation">
+                        <div class="scanner-line"></div>
+                        <i class="fa-solid fa-microchip fa-3x text-warning mb-3"></i>
                     </div>
-                    <p class="mt-2 text-muted small">Scanning deepfake artifacts...</p>
+                    <h5 class="mt-4">Analyzing Media...</h5>
+                    <div class="progress mt-3" style="height: 8px; background: #222;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" 
+                             role="progressbar" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <p class="mt-3  small" id="loaderText">Initializing neural scanner...</p>
                 </div>
 
-                <div id="resultArea"></div>
+                <!-- Result Area -->
+                <div id="resultArea" class="result-container"></div>
 
             </div>
+
+            <!-- Features Section -->
+            <div class="features-grid mt-5 pt-5">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="feature-card animate__animated">
+                            <div class="feature-icon">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <h5>Lightning Fast</h5>
+                            <p class=" small">Results in under 10 seconds with 99.7% accuracy</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card animate__animated">
+                            <div class="feature-icon">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <h5>Secure & Private</h5>
+                            <p class=" small">Your files are never stored or shared</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card animate__animated">
+                            <div class="feature-icon">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <h5>AI-Powered</h5>
+                            <p class=" small">Advanced neural networks trained on millions of samples</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <section class="about-section py-5 overflow-hidden">
-    <div class="container">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6 animate__animated animate__fadeInLeft">
-                <div class="about-image-wrapper">
-                    <img src="assets/about-ai.png" alt="AI Concept" class="img-fluid rounded-4 shadow-lg main-about-img">
-                    <div class="floating-badge shadow animate__animated animate__pulse animate__infinite">
-                        <i class="fa-solid fa-shield-virus"></i>
-                        <span>Secure Scanning</span>
+    <!-- About Section -->
+    <section class="about-section py-5" id="about">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 animate__animated animate__fadeInLeft">
+                    <div class="about-image-wrapper">
+                        <div class="image-placeholder">
+                            <i class="fa-solid fa-robot fa-5x text-warning"></i>
+                        </div>
+                        <div class="floating-badge">
+                            <i class="fa-solid fa-shield-virus"></i>
+                            <span>99.7% Accuracy</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-lg-6 animate__animated animate__fadeInRight">
-                <div class="ps-lg-4">
-                    <h6 class="text-warning text-uppercase fw-bold mb-3">Empowering Truth</h6>
-                    <h2 class="display-5 fw-bold mb-4 text-white">Why Verify Reality Matters in 2026?</h2>
-                    <p class="text-secondary mb-4">
-                        In an era where generative AI can replicate human features with 99% accuracy, the line between truth and fabrication has blurred. Our platform serves as your digital guardian, using deep-pixel analysis to restore trust in visual media.
-                    </p>
-                    
-                    <div class="row g-4 mt-2">
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-start">
-                                <div class="icon-circle bg-warning text-dark me-3">
-                                    <i class="fa-solid fa-fingerprint"></i>
+                <div class="col-lg-6 animate__animated animate__fadeInRight">
+                    <div class="ps-lg-4">
+                        <h6 class="text-warning text-uppercase fw-bold mb-3">
+                            <i class="fa-solid fa-star me-2"></i>Empowering Truth
+                        </h6>
+                        <h2 class="display-5 fw-bold mb-4 text-white">Why AI Detection Matters in 2026?</h2>
+                        <p class="text-secondary mb-4">
+                            In an era where generative AI can replicate reality with stunning accuracy, 
+                            distinguishing authentic content from synthetic media has become critical. 
+                            Our platform uses advanced deep-pixel analysis and metadata scanning to restore 
+                            trust in digital media.
+                        </p>
+                        
+                        <div class="row g-4 mt-2">
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-start">
+                                    <div class="icon-circle bg-warning text-dark me-3">
+                                        <i class="fa-solid fa-fingerprint"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-white mb-1">Deep Analysis</h6>
+                                        <p class="small  mb-0">Metadata & noise pattern scanning</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h6 class="text-white mb-1">Deep Analysis</h6>
-                                    <p class="small text-muted">Scanning metadata & noise patterns.</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-start">
+                                    <div class="icon-circle bg-warning text-dark me-3">
+                                        <i class="fa-solid fa-globe"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-white mb-1">Multi-Format</h6>
+                                        <p class="small  mb-0">Images, videos, audio & more</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-start">
-                                <div class="icon-circle bg-warning text-dark me-3">
-                                    <i class="fa-solid fa-bolt"></i>
-                                </div>
-                                <div>
-                                    <h6 class="text-white mb-1">Instant Verification</h6>
-                                    <p class="small text-muted">Results in under 10 seconds.</p>
-                                </div>
-                            </div>
-                        </div>
+
+                        <button class="btn btn-outline-warning btn-lg mt-5 px-4 rounded-pill">
+                            <i class="fa-solid fa-book-open me-2"></i>Learn More About AI Ethics
+                        </button>
                     </div>
-
-                    <button class="btn btn-outline-warning btn-lg mt-5 px-4 rounded-pill">
-                        Learn More About AI Ethics
-                    </button>
                 </div>
             </div>
         </div>
-    </div>
     </section>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6">
-                    <h5 class="text-white">Verify Reality</h5>
-                    <p class="text-muted small">We provide state-of-the-art tools to detect synthetic media, ensuring transparency in the digital age.</p>
-                    <div class="social-icons mt-3">
+                    <h5 class="text-white mb-4">
+                        <i class="fa-solid fa-layer-group me-2 text-warning"></i>AI Detector
+                    </h5>
+                    <p class=" small">
+                        We provide state-of-the-art tools to detect synthetic media, 
+                        ensuring transparency and trust in the digital age.
+                    </p>
+                    <div class="social-icons mt-4">
                         <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
                         <a href="#"><i class="fa-brands fa-twitter"></i></a>
                         <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
@@ -152,8 +317,8 @@
                 <div class="col-lg-2 col-md-6">
                     <h5>Quick Links</h5>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">About Us</a></li>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
                         <li><a href="#">API Access</a></li>
                         <li><a href="#">Pricing</a></li>
                     </ul>
@@ -169,19 +334,109 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <h5>Newsletter</h5>
-                    <p class="text-muted small">Subscribe to get the latest AI detection updates.</p>
+                    <p class=" small">Get the latest AI detection updates.</p>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Email address">
-                        <button class="btn btn-outline-warning" type="button">Subscribe</button>
+                        <input type="email" class="form-control bg-dark text-light border-secondary" 
+                               placeholder="Your email address">
+                        <button class="btn btn-warning" type="button">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
             </div>
-            <div class="footer-bottom text-center">
-                <p class="mb-0">&copy; 2024 Verify Reality Inc. All rights reserved.</p>
+            <div class="footer-bottom text-center mt-5 pt-4">
+                <p class="mb-0 ">
+                    &copy; 2026 AI Detector Inc. All rights reserved. | 
+                    <a href="#" class="text-warning text-decoration-none">Terms</a> | 
+                    <a href="#" class="text-warning text-decoration-none">Privacy</a>
+                </p>
             </div>
         </div>
     </footer>
-    <script src="script.js"></script>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title">
+                        <i class="fa-solid fa-right-to-bracket me-2 text-warning"></i>Login to Your Account
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control bg-dark text-light border-secondary" 
+                                   placeholder="you@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control bg-dark text-light border-secondary" 
+                                   placeholder="Enter your password">
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                            <label class="form-check-label small" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 fw-bold">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i>Login
+                        </button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-warning text-decoration-none small">Forgot Password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title">
+                        <i class="fa-solid fa-user-plus me-2 text-warning"></i>Create New Account
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control bg-dark text-light border-secondary" 
+                                   placeholder="John Doe">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control bg-dark text-light border-secondary" 
+                                   placeholder="you@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control bg-dark text-light border-secondary" 
+                                   placeholder="Create a strong password">
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="agreeTerms">
+                            <label class="form-check-label small" for="agreeTerms">
+                                I agree to the Terms & Conditions
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 fw-bold">
+                            <i class="fa-solid fa-user-plus me-2"></i>Sign Up
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
-</html> 
+</html>
